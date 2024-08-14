@@ -13,7 +13,6 @@ game.drawTile = function (tileColumn, tileRow, x, y) {
 		game.options.tileHeight
 	)
 }
-
 game.drawStructure = function (name, x, y) {
 	var structure = game.structures[name]
 	for (var i = 0; i < structure.length; i++) {
@@ -21,6 +20,32 @@ game.drawStructure = function (name, x, y) {
 	}
 }
 
+game.knifeImage = new Image();
+game.knifeImage.src = 'knife.png';
+game.knifeImage.onload = function() {
+  console.log("Knife image loaded successfully.");
+};
+game.knifeImage.onerror = function() {
+  console.error("Failed to load knife image.");
+};
+
+
+    
+    game.createKnife = function() {
+	game.knives = []; // Đặt lại danh sách dao
+	for (var i = 0; i < 5; i++) { // Thay đổi số lượng dao theo nhu cầu
+	  var knife = {
+	    x: Math.random() * game.canvas.width,
+	    y: Math.random() * -game.canvas.height, // Đặt dao nằm ở phía trên canvas
+	    width: 20,
+	    height: 20,
+	    speed: 2
+	  };
+	  game.knives.push(knife);
+	}
+	console.log("Knives created:", game.knives);
+    };
+    
 game.drawPlayer = function () {
 	actualPlayerTile = game.player.animations[game.player.direction][game.player.animationFrameNumber % 4]
 	game.context.drawImage(
@@ -35,10 +60,8 @@ game.drawPlayer = function () {
 		game.options.tileHeight
 	)
 }
-
 game.redraw = function () {
 	game.drawPending = false
-
 	// Draw the background
 	if (game.backgrounds['sky'].loaded) {
 		var pattern = game.context.createPattern(game.backgrounds['sky'].image, 'repeat') // Create a pattern with this image, and set it to "repeat".
@@ -46,14 +69,12 @@ game.redraw = function () {
 	} else {
 		game.context.fillStyle = "#78c5ff"
 	}
-
 	game.context.fillRect(0, 0, game.canvas.width, game.canvas.height)
 
 	if (game.backgrounds['trees'].loaded) {
 		game.context.drawImage(game.backgrounds['trees'].image, 0, game.canvas.height / 2 - game.player.y / 10, 332, 180)
 		game.context.drawImage(game.backgrounds['trees'].image, 332, game.canvas.height / 2 - game.player.y / 10, 332, 180)
 	}
-
 	// List nearest structures
 	var structuresToDraw = []
 	var drawing_distance = 15
@@ -67,24 +88,44 @@ game.redraw = function () {
 			structuresToDraw.push(game.map.structures[i])
 		}
 	}
-
 	// Draw them
 	for (var i = 0; i < structuresToDraw.length; i++) {
 		game.drawStructure(structuresToDraw[i].name, structuresToDraw[i].x, structuresToDraw[i].y)
 	}
-
+	
 	// Draw the player
 	game.drawPlayer()
-
 	game.counter.innerHTML = "Points: " + Math.round(-game.player.highestY / (3 * game.options.tileHeight)), game.canvas.width - 50, game.canvas.height - 12
 }
+
+game.drawKnife = function (knife) {
+      var knifeImage = new Image();
+      knifeImage.src = 'knife.png';
+      
+      console.log("Creating knife image:", knifeImage);
+    
+      knifeImage.onload = function() {
+        console.log("Knife image loaded.");
+        game.context.drawImage(
+          knifeImage,
+          knife.x,
+          knife.y,
+          knife.width,
+          knife.height
+        );
+      };
+    
+      knifeImage.onerror = function() {
+        console.error("Failed to load knife image.");
+      };
+    };
+    
 
 game.requestRedraw = function () {
 	if (!game.drawPending && !game.isOver) {
 		game.drawPending = true
 		requestAnimationFrame(game.redraw)
 	}
-
 	if(game.isOver) {
 		clearInterval(this.player.fallInterval)
 		game.context.font = "30px superscript"
