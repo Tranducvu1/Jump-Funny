@@ -33,4 +33,6 @@ game.checkCollisions = function () {
 	}
 
 	return false
+
+	
 }
