@@ -1,4 +1,4 @@
-<img src="https://i.ibb.co/F3T1QTH/Screenshot-2019-04-28-at-11-18-55.png" alt="Melon Man" height="400"/>
+<img src="./textures.png" alt="Melon Man" height="400"/>
 
 # The-Melon-Man
 

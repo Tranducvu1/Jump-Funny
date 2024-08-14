@@ -36,3 +36,30 @@ game.checkCollisions = function () {
 
 	
 }
+game.checkCollisions = function () {
+	for (var i = 0; i < game.map.structures.length; i++) {
+	    var structure = game.map.structures[i];
+	    if (structure.name === "lava_platform") {
+	        // Check collision between player and lava platform
+	        if (game.player.x < structure.x + game.options.tileWidth &&
+	            game.player.x + game.options.tileWidth > structure.x &&
+	            game.player.y < structure.y + game.options.tileHeight &&
+	            game.player.y + game.options.tileHeight > structure.y) {
+	            
+	            // End game if collision detected
+	            game.isOver = true; 
+	        } else {
+	            // Move lava platform towards player
+	            if (structure.y < game.player.y) {
+	                structure.y += structure.speed;
+	            } else {
+	                structure.y = game.player.y;
+	            }
+	            
+	            // Increase speed gradually
+	            structure.speed += 0.01; 
+	        }
+	    }
+	}
+};
+
